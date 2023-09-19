@@ -9,5 +9,8 @@
     "dev": "ts-node main.ts"
   },
   "author": "",
-  "license": "BSD-3-Clause"
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "discord.js": "^14.13.0"
+  }
 }
