@@ -20,7 +20,6 @@ const client = new Client({
 client.commands = new Collection();
 
 
-
 client.once(Events.ClientReady, c =>{
     console.log(`Logged in as: ${c.user.tag}`)
 } )
