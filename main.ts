@@ -1,8 +1,10 @@
 // import 'discord.js'
-import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
+import { Client, Collection, Events, GatewayIntentBits, Guild } from 'discord.js'
+import { MoonlinkManager, MoonlinkWebsocket } from 'moonlink.js';
 declare module "discord.js" {
     export interface Client {
       commands: Collection<any, any>;
+      moon: MoonlinkManager;
     }
   }
 require('dotenv').config()
@@ -16,6 +18,20 @@ const client = new Client({
         GatewayIntentBits.GuildVoiceStates
     ]
 })
+
+client.moon = new MoonlinkManager(
+    [{
+        host: 'risaton.net',
+        port: 2333,
+        secure: false,
+        password: 'yukilava'
+    }],
+    {},
+    (guild: any, sPayload: any)=>{
+        client.guilds.cache.get(guild)?.shard.send(JSON.parse(sPayload));
+    }
+);
+
 
 // client.commands = new Collection();
 
