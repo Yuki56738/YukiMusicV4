@@ -44,6 +44,7 @@ client.once(Events.ClientReady, c =>{
     c.guilds.cache.forEach((guild)=>{
         console.log(guild.name)
     })
+    console.log('------------------------')
 } )
 
 client.on('interactionCreate', async interaction =>{
