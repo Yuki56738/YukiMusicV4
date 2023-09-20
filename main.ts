@@ -1,6 +1,6 @@
 // import 'discord.js'
 import { Client, Collection, Events, GatewayIntentBits, Guild } from 'discord.js'
-import { MoonlinkManager, MoonlinkWebsocket } from 'moonlink.js';
+import { MoonlinkManager, MoonlinkWebsocket, Node, NodeStats } from 'moonlink.js';
 declare module "discord.js" {
     export interface Client {
       commands: Collection<any, any>;
@@ -31,6 +31,9 @@ client.moon = new MoonlinkManager(
         client.guilds.cache.get(guild)?.shard.send(JSON.parse(sPayload));
     }
 );
+client.moon.on('nodeCreate', (node)=>{
+    console.log(`Node ${node.host} was connected.`)
+})
 
 
 // client.commands = new Collection();
@@ -38,6 +41,9 @@ client.moon = new MoonlinkManager(
 
 client.once(Events.ClientReady, c =>{
     console.log(`Logged in as: ${c.user.tag}`)
+    c.guilds.cache.forEach((guild)=>{
+        console.log(guild.name)
+    })
 } )
 
 client.on('interactionCreate', async interaction =>{
