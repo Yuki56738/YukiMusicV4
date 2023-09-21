@@ -36,7 +36,8 @@ const rest: REST = new REST().setToken(token);
     try{
         console.log('Started deploying commands...');
         const data = await rest.put(
-            Routes.applicationCommands(cliendId),
+            // Routes.applicationCommands(cliendId),
+            Routes.applicationGuildCommands(cliendId, '977138017095520256'),
             { body: commands }
         );
     }catch(error){
