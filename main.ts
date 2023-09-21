@@ -1,6 +1,7 @@
 import { Client, Collection, Events, GatewayIntentBits, Guild } from 'discord.js'
 import { Connectors, Shoukaku } from 'shoukaku';
-
+import fs from 'node:fs'
+import path from 'node:path'
 declare module "discord.js" {
     export interface Client {
       commands: Collection<any, any>;
@@ -31,6 +32,17 @@ const client = new Client({
     ]
 })
 
+client.commands = new Collection();
+
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath)
+
+for(const file of commandFiles){
+    const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+    client.commands.set(command.data.name, command);
+}
+
 const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
 shoukaku.on('error', (_, error) => console.error(error));
 
@@ -41,8 +53,26 @@ client.once(Events.ClientReady, c =>{
         console.log(guild.name)
     })
     console.log('------------------------')
-    
+
 } )
+
+client.on(Events.InteractionCreate, async interaction =>{
+    // console.log(interaction)
+    if (!interaction.isChatInputCommand()) return;
+    const command = interaction.client.commands.get(interaction.commandName)
+    if (!command){
+        console.error(`No command matching: ${interaction.commandName}`)
+        return;
+    }
+    try{
+        await command.execute(interaction);
+    }catch(error){
+        console.error(error)
+        await interaction.channel?.send({
+            content: '内部の致命的なエラー. 開発者にお問い合わせください。'
+        })
+    }
+})
 
 client.login(process.env.DISCORD_TOKEN)
 client.shoukaku = shoukaku;
