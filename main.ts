@@ -41,6 +41,7 @@ client.once(Events.ClientReady, c =>{
         console.log(guild.name)
     })
     console.log('------------------------')
+    
 } )
 
 client.login(process.env.DISCORD_TOKEN)
@@ -48,5 +49,9 @@ client.shoukaku = shoukaku;
 
 
 client.shoukaku.on('ready', (e)=>{
-    console.log('shoukaku is ready.')
+    console.log(`shoukaku is ready: ${e}`)
+})
+
+client.shoukaku.on('close', (e)=>{
+    console.log(`Node connection was closed: ${e}`)
 })
