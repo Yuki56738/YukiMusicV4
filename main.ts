@@ -1,15 +1,27 @@
-// import 'discord.js'
 import { Client, Collection, Events, GatewayIntentBits, Guild } from 'discord.js'
-import { MoonlinkManager, MoonlinkWebsocket, Node, NodeStats } from 'moonlink.js';
+import { Connectors, Shoukaku } from 'shoukaku';
+
 declare module "discord.js" {
     export interface Client {
       commands: Collection<any, any>;
-      moon: MoonlinkManager;
+      shoukaku: Shoukaku;
     }
   }
+
 require('dotenv').config()
 
 console.log('hello')
+
+const Nodes = [
+    {
+    // name: 'test',
+    // url: 'host.kazu123.net:15487',
+    // auth: 'test123
+    name: 'yukilava',
+    url: 'localhost:2333',
+    auth: 'yukilava'
+    }
+]
 
 const client = new Client({
     intents: [
@@ -19,24 +31,8 @@ const client = new Client({
     ]
 })
 
-client.moon = new MoonlinkManager(
-    [{
-        host: 'risaton.net',
-        port: 2333,
-        secure: false,
-        password: 'yukilava'
-    }],
-    {},
-    (guild: any, sPayload: any)=>{
-        client.guilds.cache.get(guild)?.shard.send(JSON.parse(sPayload));
-    }
-);
-client.moon.on('nodeCreate', (node)=>{
-    console.log(`Node ${node.host} was connected.`)
-})
-
-
-// client.commands = new Collection();
+const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
+shoukaku.on('error', (_, error) => console.error(error));
 
 
 client.once(Events.ClientReady, c =>{
@@ -47,11 +43,10 @@ client.once(Events.ClientReady, c =>{
     console.log('------------------------')
 } )
 
-client.on('interactionCreate', async interaction =>{
-    if(!interaction.isChatInputCommand()) return;
-    if(interaction.commandName === 'ping'){
-        await interaction.reply('Pong!')
-    } 
-})
-
 client.login(process.env.DISCORD_TOKEN)
+client.shoukaku = shoukaku;
+
+
+client.shoukaku.on('ready', (e)=>{
+    console.log('shoukaku is ready.')
+})
