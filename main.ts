@@ -7,11 +7,11 @@ declare module "discord.js" {
       commands: Collection<any, any>;
       shoukaku: Shoukaku;
     }
-  }
+}
 
 require('dotenv').config()
 
-console.log('hello')
+console.log('Script started.')
 
 let lavalink_auth: string = "";
 if (process.env.LAVALINK_AUTH != undefined){
