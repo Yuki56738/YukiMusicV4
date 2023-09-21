@@ -13,6 +13,10 @@ require('dotenv').config()
 
 console.log('hello')
 
+let lavalink_auth: string = "";
+if (process.env.LAVALINK_AUTH != undefined){
+    lavalink_auth = process.env.LAVALINK_AUTH;
+}
 const Nodes = [
     {
     // name: 'test',
@@ -20,7 +24,7 @@ const Nodes = [
     // auth: 'test123
     name: 'yukilava',
     url: 'localhost:2333',
-    auth: 'yukilava'
+    auth: lavalink_auth
     }
 ]
 
@@ -54,7 +58,7 @@ client.once(Events.ClientReady, c =>{
     })
     console.log('------------------------')
 
-} )
+})
 
 client.on(Events.InteractionCreate, async interaction =>{
     // console.log(interaction)
