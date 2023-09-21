@@ -19,9 +19,6 @@ if (process.env.LAVALINK_AUTH != undefined){
 }
 const Nodes = [
     {
-    // name: 'test',
-    // url: 'host.kazu123.net:15487',
-    // auth: 'test123
     name: 'yukilava',
     url: 'localhost:2333',
     auth: lavalink_auth
