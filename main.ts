@@ -1,4 +1,4 @@
-import { Client, Collection, Embed, Events, GatewayIntentBits, Guild, SlashCommandBuilder } from 'discord.js'
+import { Client, Collection, Embed, Events, GatewayIntentBits, Guild, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
 import { Connectors, Shoukaku } from 'shoukaku';
 import fs from 'node:fs'
 import path from 'node:path'
@@ -6,6 +6,7 @@ declare module "discord.js" {
     export interface Client {
       commands: Collection<any, any>;
       shoukaku: Shoukaku;
+    //   SlashCommandStringOption: string
     }
 }
 
@@ -95,7 +96,10 @@ client.on(Events.InteractionCreate, async interaction =>{
         return
     }
     if (interaction.commandName === 'play'){
-        interaction.reply('Pong!')
+        // interaction.reply('Pong!')
+        const { options } = interaction;
+        let url = interaction.options.getString('url')
+        // interaction.reply(String(url))
         return
     }
     // const command = interaction.client.commands.get(interaction.commandName)
