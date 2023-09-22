@@ -1,12 +1,12 @@
 import { Client, Collection, Embed, Events, GatewayIntentBits, Guild, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
-import { Connectors, Shoukaku } from 'shoukaku';
+import { Connectors, Player, Shoukaku } from 'shoukaku';
 import fs from 'node:fs'
 import path from 'node:path'
+import { userInfo } from 'node:os';
 declare module "discord.js" {
     export interface Client {
       commands: Collection<any, any>;
-      shoukaku: Shoukaku;
-    //   SlashCommandStringOption: string
+      shoukaku: any;
     }
 }
 
@@ -40,8 +40,8 @@ const client = new Client({
 
 client.commands = new Collection();
 
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath)
+// const commandsPath = path.join(__dirname, 'commands');
+// const commandFiles = fs.readdirSync(commandsPath)
 
 // for(const file of commandFiles){
 //     const filePath = path.join(commandsPath, file);
@@ -59,16 +59,6 @@ client.once(Events.ClientReady, async c =>{
         console.log(guild.name)
     })
     console.log('------------------------')
-    // const data = [
-    //     {
-    //     name: 'ping',
-    //     description: 'Reply with Pong!'
-    //     },
-    //     {
-    //         name: 'play',
-    //         description: '音楽を再生する。'
-    //     }
-    // ]
     let commands = []
     const commandPing = new SlashCommandBuilder()
         .setName('ping')
@@ -97,24 +87,35 @@ client.on(Events.InteractionCreate, async interaction =>{
     }
     if (interaction.commandName === 'play'){
         // interaction.reply('Pong!')
-        const { options } = interaction;
+        // const { options } = interaction;
         let url = interaction.options.getString('url')
+        let guildId = ''
+        if (interaction.guildId != undefined){
+            guildId = String(interaction.guildId)
+        }
+        const guild = client.guilds.cache.get(String(interaction.guild?.id))
+        const member = guild?.members.cache.get(String(interaction.member?.user.id))
+        const voiceChannel = member?.voice.channel;
+        const node = shoukaku.getNode();
+        const result = await node?.rest.resolve(`ytsearch:${String(url)}`)
+        const metadata = result?.tracks.shift();
+        const player = await node?.joinChannel(
+            {
+                guildId: guildId,
+                channelId: String(voiceChannel?.id),
+                shardId: 0
+            }
+        )
+        player?.playTrack(
+            {
+                track: String(metadata?.track)
+            }
+        )
+            .setVolume(5)
+        
         // interaction.reply(String(url))
         return
     }
-    // const command = interaction.client.commands.get(interaction.commandName)
-    // if (!command){
-    //     console.error(`No command matching: ${interaction.commandName}`)
-    //     return;
-    // }
-    // try{
-    //     await command.execute(interaction);
-    // }catch(error){
-    //     console.error(error)
-    //     await interaction.channel?.send({
-    //         content: '内部の致命的なエラー. 開発者にお問い合わせください。'
-    //     })
-    // }
 })
 
 client.login(process.env.DISCORD_TOKEN)
