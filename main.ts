@@ -1,5 +1,5 @@
 import { Client, Collection, Embed, Events, GatewayIntentBits, Guild, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
-import { Connectors, Player, Shoukaku } from 'shoukaku';
+import { Connectors, Node, Player, Shoukaku } from 'shoukaku';
 import fs from 'node:fs'
 import path from 'node:path'
 import { userInfo } from 'node:os';
@@ -99,19 +99,38 @@ client.on(Events.InteractionCreate, async interaction =>{
         const node = shoukaku.getNode();
         const result = await node?.rest.resolve(`ytsearch:${String(url)}`)
         const metadata = result?.tracks.shift();
-        const player = await node?.joinChannel(
+        try{
+            const player = await node?.joinChannel(
             {
                 guildId: guildId,
                 channelId: String(voiceChannel?.id),
                 shardId: 0
             }
-        )
-        player?.playTrack(
-            {
-                track: String(metadata?.track)
+            )
+            player?.playTrack(
+                {
+                    track: String(metadata?.track)
+                }
+            )
+                .setVolume(0.5)
+        }catch(error){
+            console.error(error)
+            try{
+            if(node?.players != undefined){
+                for(const x of node.players){
+                    if(x[0] === guildId){
+                        x[1].playTrack(
+                            {
+                                track: String(metadata?.track)
+                            }
+                        ).setVolume(0.5)
+                    }
+                }
             }
-        )
-            .setVolume(5)
+            }catch(error){
+                console.log(error)
+            }
+        }
         
         // interaction.reply(String(url))
         return
@@ -122,10 +141,10 @@ client.login(process.env.DISCORD_TOKEN)
 client.shoukaku = shoukaku;
 
 
-client.shoukaku.on('ready', (e)=>{
+client.shoukaku.on('ready', (e: any)=>{
     console.log(`shoukaku is ready: ${e}`)
 })
 
-client.shoukaku.on('close', (e)=>{
+client.shoukaku.on('close', (e: any)=>{
     console.log(`Node connection was closed: ${e}`)
 })
