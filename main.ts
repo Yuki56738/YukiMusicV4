@@ -116,17 +116,17 @@ client.on(Events.InteractionCreate, async interaction =>{
         }catch(error){
             console.error(error)
             try{
-            if(node?.players != undefined){
-                for(const x of node.players){
-                    if(x[0] === guildId){
-                        x[1].playTrack(
-                            {
-                                track: String(metadata?.track)
-                            }
-                        ).setVolume(0.5)
+                if (node?.players != undefined) {
+                    for (const x of node.players) {
+                        if (x[0] === guildId) {
+                            x[1].playTrack(
+                                {
+                                    track: String(metadata?.track)
+                                }
+                            ).setVolume(0.5)
+                        }
                     }
                 }
-            }
             }catch(error){
                 console.log(error)
             }
