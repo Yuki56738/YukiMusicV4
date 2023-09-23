@@ -1,4 +1,4 @@
-import { Client, Collection, Embed, Events, GatewayIntentBits, Guild, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
+import { Client, Collection, Embed, EmbedBuilder, EmbedData, Events, GatewayIntentBits, Guild, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
 import { Connectors, Node, Player, Queue, Shoukaku } from 'shoukaku';
 import fs from 'node:fs'
 import path from 'node:path'
@@ -97,6 +97,14 @@ client.on(Events.InteractionCreate, async interaction =>{
         // interaction.reply('Pong!')
         // const { options } = interaction;
         interaction.reply('wait...')
+        const embedmsg = new EmbedBuilder()
+            .setTitle('音楽BOT Created by Yuki.')
+            .setDescription(
+                '音楽BOTのプロトタイプ。\n/play [URLまたは曲名] :音楽を再生します。\n/stop :音楽を止めます。\n/leave :BOTを退出させます。'
+            )
+        await interaction.webhook.send({
+            embeds: [embedmsg]
+        })
         let url = interaction.options.getString('url')
         let guildId = ''
         if (interaction.guildId != undefined){
