@@ -18,11 +18,14 @@ let lavalink_auth: string = "";
 if (process.env.LAVALINK_AUTH != undefined){
     lavalink_auth = process.env.LAVALINK_AUTH;
 }
-
-const nodes = [
+let lavalink_url = ''
+if(process.env.LAVALINK_URL != undefined){
+    lavalink_url = process.env.LAVALINK_URL
+}
+const Nodes = [
     {
     name: 'yukilava',
-    url: process.env.LAVALINK_URL,
+    url: lavalink_url,
     auth: lavalink_auth
     }
 ]
@@ -45,8 +48,7 @@ client.commands = new Collection();
 // 	const command = require(filePath);
 //     client.commands.set(command.data.name, command);
 // }
-
-const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), nodes);
+const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
 shoukaku.on('error', (_, error) => console.error(error));
 
 
@@ -94,14 +96,20 @@ client.on(Events.InteractionCreate, async interaction =>{
     if (interaction.commandName === 'play'){
         // interaction.reply('Pong!')
         // const { options } = interaction;
-        interaction.reply('wait...')
+        // interaction.reply('wait...')
+        await interaction.deferReply()
         const embedmsg = new EmbedBuilder()
             .setTitle('音楽BOT Created by Yuki.')
             .setDescription(
                 '音楽BOTのプロトタイプ。\n/play [URLまたは曲名] :音楽を再生します。\n/stop :音楽を止めます。\n/leave :BOTを退出させます。'
             )
-        await interaction.webhook.send({
+            
+        await interaction.editReply({
             embeds: [embedmsg]
+        }).then(msg =>{
+            setTimeout(()=> msg.delete(), 10000)
+        }).catch((error)=>{
+            console.error(error)
         })
         const url = interaction.options.getString('url')
         let guildId = ''
