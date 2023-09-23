@@ -74,6 +74,10 @@ client.once(Events.ClientReady, async c =>{
                 .setRequired(true)
         )
     commands.push(commandPlay.toJSON())
+    const commandStop = new SlashCommandBuilder()
+            .setName('stop')
+            .setDescription('音楽を停止する。')
+    commands.push(commandStop.toJSON())
     await client.application?.commands.set(commands);
 })
 
@@ -88,6 +92,7 @@ client.on(Events.InteractionCreate, async interaction =>{
     if (interaction.commandName === 'play'){
         // interaction.reply('Pong!')
         // const { options } = interaction;
+        interaction.reply('wait...')
         let url = interaction.options.getString('url')
         let guildId = ''
         if (interaction.guildId != undefined){
@@ -136,6 +141,21 @@ client.on(Events.InteractionCreate, async interaction =>{
         // interaction.reply(String(url))
         return
     }
+    if(interaction.commandName === 'stop'){
+        interaction.reply('wait...')
+        try{
+            const node = shoukaku.getNode()
+            if(node?.players != undefined){
+                for (const x of node.players){
+                    if(x[0] === interaction.guildId){
+                        x[1].stopTrack()
+                    }
+                }
+            }
+        }catch(error){
+            console.error(error)
+        }
+    }
 })
 
 client.login(process.env.DISCORD_TOKEN)
@@ -149,4 +169,3 @@ client.shoukaku.on('ready', (e: any)=>{
 client.shoukaku.on('close', (e: any)=>{
     console.log(`Node connection was closed: ${e}`)
 })
-
