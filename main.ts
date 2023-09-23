@@ -1,5 +1,5 @@
 import { Client, Collection, Embed, Events, GatewayIntentBits, Guild, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
-import { Connectors, Node, Player, Shoukaku } from 'shoukaku';
+import { Connectors, Node, Player, Queue, Shoukaku } from 'shoukaku';
 import fs from 'node:fs'
 import path from 'node:path'
 import { userInfo } from 'node:os';
@@ -112,18 +112,19 @@ client.on(Events.InteractionCreate, async interaction =>{
                     track: String(metadata?.track)
                 }
             )
-                .setVolume(0.5)
+                .setVolume(0.1)
         }catch(error){
             console.error(error)
             try{
                 if (node?.players != undefined) {
                     for (const x of node.players) {
                         if (x[0] === guildId) {
+                            x[1].stopTrack()
                             x[1].playTrack(
                                 {
                                     track: String(metadata?.track)
                                 }
-                            ).setVolume(0.5)
+                            ).setVolume(0.1)
                         }
                     }
                 }
@@ -148,3 +149,4 @@ client.shoukaku.on('ready', (e: any)=>{
 client.shoukaku.on('close', (e: any)=>{
     console.log(`Node connection was closed: ${e}`)
 })
+
