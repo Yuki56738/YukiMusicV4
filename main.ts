@@ -6,7 +6,7 @@ import { userInfo } from 'node:os';
 declare module "discord.js" {
     export interface Client {
       commands: Collection<any, any>;
-      shoukaku: any;
+      shoukaku: Shoukaku;
     }
 }
 
@@ -22,10 +22,10 @@ let testGuildId:string = '';
 if (process.env.TEST_GUILD_ID != undefined){
     testGuildId = process.env.TEST_GUILD_ID;
 }
-const Nodes = [
+const nodes = [
     {
     name: 'yukilava',
-    url: 'localhost:2333',
+    url: process.env.LAVALINK_URL,
     auth: lavalink_auth
     }
 ]
@@ -49,7 +49,7 @@ client.commands = new Collection();
 //     client.commands.set(command.data.name, command);
 // }
 
-const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
+const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), nodes);
 shoukaku.on('error', (_, error) => console.error(error));
 
 
@@ -116,6 +116,7 @@ client.on(Events.InteractionCreate, async interaction =>{
         const node = shoukaku.getNode();
         const result = await node?.rest.resolve(`ytsearch:${String(url)}`)
         const metadata = result?.tracks.shift();
+        
         try{
             const player = await node?.joinChannel(
             {
