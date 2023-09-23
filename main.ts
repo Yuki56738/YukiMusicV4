@@ -78,6 +78,10 @@ client.once(Events.ClientReady, async c =>{
             .setName('stop')
             .setDescription('音楽を停止する。')
     commands.push(commandStop.toJSON())
+    const commandLeave = new SlashCommandBuilder()
+            .setName('leave')
+            .setDescription('BOTを退出させる。')
+    commands.push(commandLeave.toJSON())
     await client.application?.commands.set(commands);
 })
 
@@ -152,11 +156,30 @@ client.on(Events.InteractionCreate, async interaction =>{
                     }
                 }
             }
+            return
         }catch(error){
             console.error(error)
         }
     }
-})
+    if(interaction.commandName === 'leave'){
+        interaction.reply('wait...')
+        try{
+            const node = shoukaku.getNode()
+            if(interaction.guildId != undefined){
+                node?.leaveChannel(interaction.guildId);
+            }
+            // if (node?.players != undefined){
+                // for (const x of node.players){
+                    // if(x[0] === interaction.guildId){
+                        // x[1].
+                    // }
+                // }
+            }catch(error){
+                console.error(error)
+            }
+        return
+    }
+});
 
 client.login(process.env.DISCORD_TOKEN)
 client.shoukaku = shoukaku;
