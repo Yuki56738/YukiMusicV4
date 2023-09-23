@@ -1,8 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Client, Collection, Embed, EmbedBuilder, EmbedData, Events, GatewayIntentBits, Guild, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
 import { Connectors, Node, Player, Queue, Shoukaku } from 'shoukaku';
-import fs from 'node:fs'
-import path from 'node:path'
-import { userInfo } from 'node:os';
 declare module "discord.js" {
     export interface Client {
       commands: Collection<any, any>;
@@ -10,6 +9,7 @@ declare module "discord.js" {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config()
 
 console.log('Script started.')
@@ -18,10 +18,7 @@ let lavalink_auth: string = "";
 if (process.env.LAVALINK_AUTH != undefined){
     lavalink_auth = process.env.LAVALINK_AUTH;
 }
-let testGuildId:string = '';
-if (process.env.TEST_GUILD_ID != undefined){
-    testGuildId = process.env.TEST_GUILD_ID;
-}
+
 const nodes = [
     {
     name: 'yukilava',
@@ -59,6 +56,7 @@ client.once(Events.ClientReady, async c =>{
         console.log(guild.name)
     })
     console.log('------------------------')
+    // eslint-disable-next-line prefer-const
     let commands = []
     const commandPing = new SlashCommandBuilder()
         .setName('ping')
@@ -105,7 +103,7 @@ client.on(Events.InteractionCreate, async interaction =>{
         await interaction.webhook.send({
             embeds: [embedmsg]
         })
-        let url = interaction.options.getString('url')
+        const url = interaction.options.getString('url')
         let guildId = ''
         if (interaction.guildId != undefined){
             guildId = String(interaction.guildId)
