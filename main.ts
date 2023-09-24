@@ -82,6 +82,10 @@ client.once(Events.ClientReady, async c =>{
             .setName('leave')
             .setDescription('BOTを退出させる。')
     commands.push(commandLeave.toJSON())
+    const commandJoin = new SlashCommandBuilder()
+            .setName('join')
+            .setDescription('BOTを接続する。')
+    commands.push(commandJoin.toJSON())
     await client.application?.commands.set(commands);
 })
 
@@ -93,10 +97,8 @@ client.on(Events.InteractionCreate, async interaction =>{
         interaction.reply('Pong!')
         return
     }
-    if (interaction.commandName === 'play'){
-        // interaction.reply('Pong!')
-        // const { options } = interaction;
-        // interaction.reply('wait...')
+
+    if(interaction.commandName === 'join'){
         await interaction.deferReply()
         const embedmsg = new EmbedBuilder()
             .setTitle('音楽BOT Created by Yuki.')
@@ -111,6 +113,31 @@ client.on(Events.InteractionCreate, async interaction =>{
         }).catch((error)=>{
             console.error(error)
         })
+        let guildId = ''
+        if (interaction.guildId != undefined){
+            guildId = String(interaction.guildId)
+        }
+        const guild = client.guilds.cache.get(String(interaction.guild?.id))
+        const member = guild?.members.cache.get(String(interaction.member?.user.id))
+        const voiceChannel = member?.voice.channel;
+        const node = shoukaku.getNode();
+        try{
+            const player = await node?.joinChannel(
+                {
+                    guildId: guildId,
+                    channelId: String(voiceChannel?.id),
+                    shardId: 0
+                }
+            )
+        }catch(error){
+            console.error(error)
+        }
+    }
+    if (interaction.commandName === 'play'){
+        // interaction.reply('Pong!')
+        // const { options } = interaction;
+        // interaction.reply('wait...')
+        await interaction.deferReply()
         const url = interaction.options.getString('url')
         let guildId = ''
         if (interaction.guildId != undefined){
@@ -123,22 +150,22 @@ client.on(Events.InteractionCreate, async interaction =>{
         const result = await node?.rest.resolve(`ytsearch:${String(url)}`)
         const metadata = result?.tracks.shift();
         
-        try{
-            const player = await node?.joinChannel(
-            {
-                guildId: guildId,
-                channelId: String(voiceChannel?.id),
-                shardId: 0
-            }
-            )
-            player?.playTrack(
-                {
-                    track: String(metadata?.track)
-                }
-            )
-                .setVolume(0.03)
-        }catch(error){
-            console.error(error)
+        // try{
+        //     const player = await node?.joinChannel(
+        //     {
+        //         guildId: guildId,
+        //         channelId: String(voiceChannel?.id),
+        //         shardId: 0
+        //     }
+        //     )
+        //     player?.playTrack(
+        //         {
+        //             track: String(metadata?.track)
+        //         }
+        //     )
+        //         .setVolume(0.03)
+        // }catch(error){
+        //     console.error(error)
             try{
                 if (node?.players != undefined) {
                     for (const x of node.players) {
@@ -149,13 +176,14 @@ client.on(Events.InteractionCreate, async interaction =>{
                                     track: String(metadata?.track)
                                 }
                             ).setVolume(0.03)
+                            await interaction.editReply(`再生中: ${metadata?.info.title}`)
                         }
                     }
                 }
             }catch(error){
                 console.log(error)
             }
-        }
+        
         
         // interaction.reply(String(url))
         return
