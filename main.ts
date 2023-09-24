@@ -136,7 +136,7 @@ client.on(Events.InteractionCreate, async interaction =>{
                     track: String(metadata?.track)
                 }
             )
-                .setVolume(0.1)
+                .setVolume(0.03)
         }catch(error){
             console.error(error)
             try{
@@ -148,7 +148,7 @@ client.on(Events.InteractionCreate, async interaction =>{
                                 {
                                     track: String(metadata?.track)
                                 }
-                            ).setVolume(0.1)
+                            ).setVolume(0.03)
                         }
                     }
                 }
