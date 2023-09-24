@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// https://discord.com/api/oauth2/authorize?client_id=889751462836568096&permissions=4298120192&scope=bot%20applications.commands
 import { Client, Collection, Embed, EmbedBuilder, EmbedData, Events, GatewayIntentBits, Guild, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
 import { Connectors, Node, Player, Queue, Shoukaku } from 'shoukaku';
 declare module "discord.js" {
