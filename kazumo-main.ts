@@ -5,7 +5,10 @@ const {Guilds, GuildVoiceStates, GuildMessages, MessageContent} = GatewayIntentB
 import { Connectors } from "shoukaku";
 import { Kazagumo, KazagumoTrack } from "kazagumo"
 import { error } from 'console';
-
+declare module "discord.js" {
+    export interface Client {
+    }
+}
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 let lavalink_auth: string = "";
@@ -76,8 +79,11 @@ client.on(Events.InteractionCreate, async interaction =>{
         let player = await kazagumo.createPlayer({
             guildId: String(interaction.guild?.id),
             textId: interaction.channelId,
-            voiceId: voiceChannel,
+            voiceId: voiceChannel!.id,
             volume: 1
+        })
+        let result = await kazagumo.search(query!, {
+            requester: interaction.user
         })
     }
 })
