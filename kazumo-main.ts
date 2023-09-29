@@ -61,8 +61,14 @@ client.once(Events.ClientReady, async c =>{
                 .setRequired(true)
         )
     commands.push(commandPlay.toJSON())
+    const commandLeave = new SlashCommandBuilder()
+            .setName('leave')
+            .setDescription('BOTを退出させる。')
+    commands.push(commandLeave.toJSON())
     await client.application?.commands.set(commands);
 })
+
+let playingGuildIds: (string | null)[] = []
 
 client.on(Events.InteractionCreate, async interaction =>{
     if (!interaction.isChatInputCommand()) return;
@@ -85,6 +91,18 @@ client.on(Events.InteractionCreate, async interaction =>{
         let result = await kazagumo.search(query!, {
             requester: interaction.user
         })
+        if(result.type === "TRACK"){
+            player.queue.add(result.tracks[0])
+        }
+        if (!player.playing && !player.paused){
+            player.play()
+            playingGuildIds.push(interaction.guildId)
+        }
+        
+    }
+    if(interaction.commandName === 'leave'){
+        interaction.reply('wait...')
+        kazagumo.getPlayer(interaction.guildId!)?.disconnect()
     }
 })
 
@@ -94,7 +112,6 @@ kazagumo.shoukaku.on('ready', (name)=>{
 kazagumo.shoukaku.on('error', (name, error) => console.error(`Lavalink ${name}: Error Caught,`, error));
 kazagumo.shoukaku.on('close', (name, code, reason) => console.warn(`Lavalink ${name}: Closed, Code ${code}, Reason ${reason || 'No reason'}`));
 kazagumo.shoukaku.on('debug', (name, info) => console.debug(`Lavalink ${name}: Debug,`, info));
-
 
 
 client.login(process.env.DISCORD_TOKEN)
