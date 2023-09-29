@@ -42,14 +42,6 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// const commandsPath = path.join(__dirname, 'commands');
-// const commandFiles = fs.readdirSync(commandsPath)
-
-// for(const file of commandFiles){
-//     const filePath = path.join(commandsPath, file);
-// 	const command = require(filePath);
-//     client.commands.set(command.data.name, command);
-// }
 const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
 shoukaku.on('error', (_, error) => console.error(error));
 
@@ -92,7 +84,6 @@ client.once(Events.ClientReady, async c =>{
 })
 
 client.on(Events.InteractionCreate, async interaction =>{
-    // console.log(interaction)
     if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName === 'ping'){
@@ -136,9 +127,6 @@ client.on(Events.InteractionCreate, async interaction =>{
         }
     }
     if (interaction.commandName === 'play'){
-        // interaction.reply('Pong!')
-        // const { options } = interaction;
-        // interaction.reply('wait...')
         await interaction.deferReply()
         const url = interaction.options.getString('url')
         let guildId = ''
@@ -151,23 +139,6 @@ client.on(Events.InteractionCreate, async interaction =>{
         const node = shoukaku.getNode();
         const result = await node?.rest.resolve(`ytsearch:${String(url)}`)
         const metadata = result?.tracks.shift();
-        
-        // try{
-        //     const player = await node?.joinChannel(
-        //     {
-        //         guildId: guildId,
-        //         channelId: String(voiceChannel?.id),
-        //         shardId: 0
-        //     }
-        //     )
-        //     player?.playTrack(
-        //         {
-        //             track: String(metadata?.track)
-        //         }
-        //     )
-        //         .setVolume(0.03)
-        // }catch(error){
-        //     console.error(error)
             try{
                 if (node?.players != undefined) {
                     for (const x of node.players) {
@@ -185,9 +156,6 @@ client.on(Events.InteractionCreate, async interaction =>{
             }catch(error){
                 console.log(error)
             }
-        
-        
-        // interaction.reply(String(url))
         return
     }
     if(interaction.commandName === 'stop'){
@@ -213,12 +181,6 @@ client.on(Events.InteractionCreate, async interaction =>{
             if(interaction.guildId != undefined){
                 node?.leaveChannel(interaction.guildId);
             }
-            // if (node?.players != undefined){
-                // for (const x of node.players){
-                    // if(x[0] === interaction.guildId){
-                        // x[1].
-                    // }
-                // }
             }catch(error){
                 console.error(error)
             }
