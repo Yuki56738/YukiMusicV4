@@ -65,6 +65,10 @@ client.once(Events.ClientReady, async c =>{
             .setName('leave')
             .setDescription('BOTを退出させる。')
     commands.push(commandLeave.toJSON())
+    const commandStop = new SlashCommandBuilder()
+            .setName('stop')
+            .setDescription('音楽を止める。')
+    commands.push(commandLeave.toJSON())
     await client.application?.commands.set(commands);
 })
 
@@ -86,6 +90,7 @@ client.on(Events.InteractionCreate, async interaction =>{
         
         const query = interaction.options.getString('url')
         const member = interaction.guild?.members.cache.get(String(interaction.member?.user.id))
+        try{
         const voiceChannel = member?.voice.channel;
         
         let player = await kazagumo.createPlayer({
@@ -104,11 +109,28 @@ client.on(Events.InteractionCreate, async interaction =>{
             player.play()
             await interaction.editReply({
                 embeds: [embedmsg]
-            })
+            }).then(msg =>{
+                setTimeout(()=>{
+                    msg.delete(), 10000
+                })
+            }).catch((error)=>{
+                console.error(error)
+            }
+            )
             playingGuildIds.push(interaction.guildId)
         }
-        
+    }catch(error){
+        console.error(error)
     }
+    }
+    if(interaction.commandName === 'stop'){
+        try{
+        kazagumo.getPlayer(interaction.guildId!)?.pause(true)
+        }catch(error){
+            console.error(error)
+        }
+    }
+
     if(interaction.commandName === 'leave'){
         interaction.reply('wait...')
         kazagumo.getPlayer(interaction.guildId!)?.disconnect()
