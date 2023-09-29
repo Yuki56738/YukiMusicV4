@@ -46,11 +46,7 @@ const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
 shoukaku.on('error', (_, error) => console.error(error));
 
 
-client.once(Events.ClientReady, async c =>{
-    console.log(`Logged in as: ${c.user.tag}`)
-    c.guilds.cache.forEach((guild)=>{
-        console.log(guild.name)
-    })
+
     console.log('------------------------')
     // eslint-disable-next-line prefer-const
     let commands = []
