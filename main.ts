@@ -148,7 +148,7 @@ client.on(Events.InteractionCreate, async interaction =>{
                                 {
                                     track: String(metadata?.track)
                                 }
-                            ).setVolume(0.03)
+                            ).setVolume(0.01)
                             await interaction.editReply(`再生中: ${metadata?.info.title}`)
                         }
                     }
