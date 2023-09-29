@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Client, Events, GatewayIntentBits, SlashCommandBuilder } from 'discord.js';
+import { Client, EmbedBuilder, Events, GatewayIntentBits, SlashCommandBuilder } from 'discord.js';
 const {Guilds, GuildVoiceStates, GuildMessages, MessageContent} = GatewayIntentBits;
 import { Connectors } from "shoukaku";
 import { Kazagumo, KazagumoTrack } from "kazagumo"
@@ -77,7 +77,13 @@ client.on(Events.InteractionCreate, async interaction =>{
         return
     }
     if(interaction.commandName === 'play'){
-        interaction.reply('wait...')
+        await interaction.reply('wait...')
+        const embedmsg = new EmbedBuilder()
+            .setTitle('音楽BOT Created by Yuki.')
+            .setDescription(
+                '音楽BOTのプロトタイプ。\n/play [URLまたは曲名] :音楽を再生します。\n/stop :音楽を止めます。\n/leave :BOTを退出させます。'
+            )
+        
         const query = interaction.options.getString('url')
         const member = interaction.guild?.members.cache.get(String(interaction.member?.user.id))
         const voiceChannel = member?.voice.channel;
@@ -96,6 +102,9 @@ client.on(Events.InteractionCreate, async interaction =>{
         }
         if (!player.playing && !player.paused){
             player.play()
+            await interaction.editReply({
+                embeds: [embedmsg]
+            })
             playingGuildIds.push(interaction.guildId)
         }
         
