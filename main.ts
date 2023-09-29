@@ -68,7 +68,7 @@ client.once(Events.ClientReady, async c =>{
     const commandStop = new SlashCommandBuilder()
             .setName('stop')
             .setDescription('音楽を止める。')
-    commands.push(commandLeave.toJSON())
+    commands.push(commandStop.toJSON())
     await client.application?.commands.set(commands);
 })
 
@@ -124,6 +124,7 @@ client.on(Events.InteractionCreate, async interaction =>{
     }
     }
     if(interaction.commandName === 'stop'){
+        await interaction.reply('wait...')
         try{
         kazagumo.getPlayer(interaction.guildId!)?.pause(true)
         }catch(error){
@@ -142,7 +143,7 @@ kazagumo.shoukaku.on('ready', (name)=>{
 })
 kazagumo.shoukaku.on('error', (name, error) => console.error(`Lavalink ${name}: Error Caught,`, error));
 kazagumo.shoukaku.on('close', (name, code, reason) => console.warn(`Lavalink ${name}: Closed, Code ${code}, Reason ${reason || 'No reason'}`));
-kazagumo.shoukaku.on('debug', (name, info) => console.debug(`Lavalink ${name}: Debug,`, info));
+// kazagumo.shoukaku.on('debug', (name, info) => console.debug(`Lavalink ${name}: Debug,`, info));
 
 
 client.login(process.env.DISCORD_TOKEN)
