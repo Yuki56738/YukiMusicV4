@@ -145,7 +145,9 @@ kazagumo.shoukaku.on('close', (name, code, reason) => console.warn(`Lavalink ${n
 
 kazagumo.on('playerStart', (player, track) => {
     const channel = client.channels.cache.get(player.textId) as TextChannel
-    channel.send(`再生中： ${track.title} by ${track.author}`)
+    const embedmsg = new EmbedBuilder()
+        .setDescription(`再生中： ${track.title} by ${track.author}`)
+    channel.send({ embeds: [embedmsg] })
 })
 
 client.on('voiceStateUpdate', (oldUser, newUser) => {
