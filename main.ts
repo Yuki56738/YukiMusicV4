@@ -142,10 +142,15 @@ kazagumo.shoukaku.on('close', (name, code, reason) => console.warn(`Lavalink ${n
 // kazagumo.shoukaku.on('debug', (name, info) => console.debug(`Lavalink ${name}: Debug,`, info));
 
 kazagumo.on('playerStart', (player, track)=>{
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-extra-non-null-assertion
-    // const channel: GuildBasedChannel = guild?.channels.cache.get(player.textId)!!
     const channel = client.channels.cache.get(player.textId) as TextChannel
     channel.send(`再生中： ${track.title} by ${track.author}`)
+})
+
+client.on('voiceStateUpdate', (oldUser, newUser)=>{
+    console.log(oldUser.channel?.members.toJSON().length)
+    if(oldUser.channel?.members.toJSON().length == 1){
+        kazagumo.getPlayer(oldUser.guild.id)?.disconnect()
+    }
 })
 
 client.login(process.env.DISCORD_TOKEN)
