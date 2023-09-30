@@ -124,7 +124,7 @@ client.on(Events.InteractionCreate, async interaction => {
     if (interaction.commandName === 'stop') {
         await interaction.reply('wait...')
         try {
-            kazagumo.getPlayer(interaction.guildId!)?.pause(true)
+            kazagumo.getPlayer(interaction.guildId!)?.shoukaku.stopTrack()
         } catch (error) {
             console.error(error)
         }
@@ -145,7 +145,9 @@ kazagumo.shoukaku.on('close', (name, code, reason) => console.warn(`Lavalink ${n
 
 kazagumo.on('playerStart', (player, track) => {
     const channel = client.channels.cache.get(player.textId) as TextChannel
-    channel.send(`再生中： ${track.title} by ${track.author}`)
+    const embedmsg = new EmbedBuilder()
+        .setDescription(`再生中： ${track.title} by ${track.author}`)
+    channel.send({ embeds: [embedmsg] })
 })
 
 client.on('voiceStateUpdate', (oldUser, newUser) => {
