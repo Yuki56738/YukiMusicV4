@@ -11,14 +11,10 @@ declare module "discord.js" {
 }
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
-let lavalink_auth: string = "";
-if (process.env.LAVALINK_AUTH != undefined){
-    lavalink_auth = process.env.LAVALINK_AUTH;
-}
-let lavalink_url = ''
-if(process.env.LAVALINK_URL != undefined){
-    lavalink_url = process.env.LAVALINK_URL
-}
+// let lavalink_auth: string = "";
+const lavalink_auth = process.env.LAVALINK_AUTH!
+const lavalink_url = process.env.LAVALINK_URL!
+
 const Nodes = [
     {
     name: 'yukilava',
