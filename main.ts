@@ -9,6 +9,7 @@ declare module "discord.js" {
     export interface Client {
     }
 }
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 // let lavalink_auth: string = "";
