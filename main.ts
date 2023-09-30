@@ -96,17 +96,17 @@ client.on(Events.InteractionCreate, async interaction => {
                 voiceId: voiceChannel!.id,
                 volume: 1
             })
-            let result = await kazagumo.search(query!, {
-                requester: interaction.user
-            })
-            // if (result.tracks.length == 0) {
-            // await interaction.channel?.send('トラックが見つかりません。')
-            // return
-            // }
-            if (result.type === "TRACK") {
-                player.queue.add(result.tracks[0])
+            let result;
+            if (query?.startsWith('http://') || query?.startsWith('https://')) {
+                result = await kazagumo.search(query!, {
+                    requester: interaction.user
+                })
             }
-            if (!player.playing && !player.paused) {
+
+            if (result!.type === "TRACK") {
+                player.queue.add(result!.tracks[0])
+            }
+            if (!player.playing) {
                 player.play()
                 await interaction.editReply({
                     embeds: [embedmsg]
