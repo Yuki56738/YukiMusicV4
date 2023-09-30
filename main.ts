@@ -69,8 +69,6 @@ client.once(Events.ClientReady, async c => {
     await client.application?.commands.set(commands);
 })
 
-let playingGuildIds: (string | null)[] = []
-
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === 'ping') {
@@ -118,7 +116,6 @@ client.on(Events.InteractionCreate, async interaction => {
                     console.error(error)
                 }
                 )
-                playingGuildIds.push(interaction.guildId)
             }
         } catch (error) {
             console.error(error)
