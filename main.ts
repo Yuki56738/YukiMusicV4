@@ -124,7 +124,7 @@ client.on(Events.InteractionCreate, async interaction => {
     if (interaction.commandName === 'stop') {
         await interaction.reply('wait...')
         try {
-            kazagumo.getPlayer(interaction.guildId!)?.pause(true)
+            kazagumo.getPlayer(interaction.guildId!)?.shoukaku.stopTrack()
         } catch (error) {
             console.error(error)
         }
