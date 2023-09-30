@@ -82,7 +82,7 @@ client.on(Events.InteractionCreate, async interaction => {
         const embedmsg = new EmbedBuilder()
             .setTitle('音楽BOT Created by Yuki.')
             .setDescription(
-                '音楽BOTのプロトタイプ。\n/play [URLまたは曲名] :音楽を再生します。\n/stop :音楽を止めます。\n/leave :BOTを退出させます。'
+                '音楽BOTのプロトタイプ。\n/play [URL] :音楽を再生します。\n/stop :音楽を止めます。\n/leave :BOTを退出させます。'
             )
 
         const query = interaction.options.getString('url')
