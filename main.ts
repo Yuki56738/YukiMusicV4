@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Client, EmbedBuilder, Events, GatewayIntentBits, SlashCommandBuilder } from 'discord.js';
+import { Client, EmbedBuilder, Events, GatewayIntentBits, GuildBasedChannel, SlashCommandBuilder, TextChannel } from 'discord.js';
 const {Guilds, GuildVoiceStates, GuildMessages, MessageContent} = GatewayIntentBits;
 import { Connectors } from "shoukaku";
 import { Kazagumo, KazagumoTrack } from "kazagumo"
@@ -11,14 +11,10 @@ declare module "discord.js" {
 }
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
-let lavalink_auth: string = "";
-if (process.env.LAVALINK_AUTH != undefined){
-    lavalink_auth = process.env.LAVALINK_AUTH;
-}
-let lavalink_url = ''
-if(process.env.LAVALINK_URL != undefined){
-    lavalink_url = process.env.LAVALINK_URL
-}
+// let lavalink_auth: string = "";
+const lavalink_auth = process.env.LAVALINK_AUTH!
+const lavalink_url = process.env.LAVALINK_URL!
+
 const Nodes = [
     {
     name: 'yukilava',
@@ -145,5 +141,16 @@ kazagumo.shoukaku.on('error', (name, error) => console.error(`Lavalink ${name}: 
 kazagumo.shoukaku.on('close', (name, code, reason) => console.warn(`Lavalink ${name}: Closed, Code ${code}, Reason ${reason || 'No reason'}`));
 // kazagumo.shoukaku.on('debug', (name, info) => console.debug(`Lavalink ${name}: Debug,`, info));
 
+kazagumo.on('playerStart', (player, track)=>{
+    const channel = client.channels.cache.get(player.textId) as TextChannel
+    channel.send(`再生中： ${track.title} by ${track.author}`)
+})
+
+client.on('voiceStateUpdate', (oldUser, newUser)=>{
+    console.log(oldUser.channel?.members.toJSON().length)
+    if(oldUser.channel?.members.toJSON().length == 1){
+        kazagumo.getPlayer(oldUser.guild.id)?.disconnect()
+    }
+})
 
 client.login(process.env.DISCORD_TOKEN)
