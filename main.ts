@@ -147,7 +147,7 @@ kazagumo.on('playerStart', (player, track) => {
 })
 
 client.on('voiceStateUpdate', (oldUser, newUser) => {
-    console.log(oldUser.channel?.members.toJSON().length)
+    // console.log(oldUser.channel?.members.toJSON().length)
     if (oldUser.channel?.members.toJSON().length == 1) {
         kazagumo.getPlayer(oldUser.guild.id)?.disconnect()
     }
