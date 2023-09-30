@@ -99,6 +99,10 @@ client.on(Events.InteractionCreate, async interaction => {
             let result = await kazagumo.search(query!, {
                 requester: interaction.user
             })
+            // if (result.tracks.length == 0) {
+            // await interaction.channel?.send('トラックが見つかりません。')
+            // return
+            // }
             if (result.type === "TRACK") {
                 player.queue.add(result.tracks[0])
             }
