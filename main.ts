@@ -92,7 +92,7 @@ client.on(Events.InteractionCreate, async interaction => {
                 guildId: String(interaction.guild?.id),
                 textId: interaction.channelId,
                 voiceId: voiceChannel!.id,
-                volume: 0.1
+                volume: 1
             })
             let result;
             if (query?.startsWith('http://') || query?.startsWith('https://')) {
