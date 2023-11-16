@@ -66,6 +66,15 @@ client.once(Events.ClientReady, async c => {
         .setName('stop')
         .setDescription('音楽を止める。')
     commands.push(commandStop.toJSON())
+    const commandSetvolume = new SlashCommandBuilder()
+        .setName('setvolume')
+        .setDescription('音量を設定する。')
+        .addIntegerOption(option =>
+            option
+                .setName('音量')
+                .setDescription('新しい音量')
+                .setRequired(true))
+    commands.push(commandSetvolume)
     await client.application?.commands.set(commands);
 })
 
@@ -133,6 +142,10 @@ client.on(Events.InteractionCreate, async interaction => {
     if (interaction.commandName === 'leave') {
         interaction.reply('wait...')
         kazagumo.getPlayer(interaction.guildId!)?.disconnect()
+    }
+    if (interaction.commandName === 'setvolume'){
+        interaction.reply('wait...')
+        kazagumo.getPlayer(interaction.guildId!)?.setVolume(Number(interaction.options.getInteger('音量')))
     }
 })
 
