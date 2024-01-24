@@ -117,12 +117,6 @@ client.on(Events.InteractionCreate, async interaction => {
                 player.play()
                 await interaction.editReply({
                     embeds: [embedmsg]
-                }).then(msg => {
-                    setTimeout(() =>
-                        msg.delete(), 10000
-                    )
-                }).catch((error) => {
-                    console.error(error)
                 }
                 )
             }
