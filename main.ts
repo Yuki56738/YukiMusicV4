@@ -112,6 +112,8 @@ client.on(Events.InteractionCreate, async interaction => {
 
             if (result!.type === "TRACK") {
                 player.queue.add(result!.tracks[0])
+            }else {
+                await interaction.channel!.send("URLが無効です")
             }
             if (!player.playing) {
                 player.play()
